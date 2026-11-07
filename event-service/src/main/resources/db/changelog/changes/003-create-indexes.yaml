@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003
+      author: Didar Auyesbay
+      changes:
+        - createIndex:
+            indexName: idx_events_location_id
+            columns:
+              - column:
+                  name: location_id
+            tableName: events
+        - createIndex:
+            indexName: idx_events_status_start_time
+            columns:
+              - column:
+                  name: status
+              - column:
+                  name: start_time
+            tableName: events
+        - createIndex:
+            indexName: idx_locations_city
+            columns:
+              - column:
+                  name: city
+            tableName: locations
+      rollback:
+        - dropIndex:
+            indexName: idx_events_location_id
+            tableName: events
+        - dropIndex:
+            indexName: idx_events_status_start_time
+            tableName: events
+        - dropIndex:
+            indexName: idx_locations_city
+            tableName: locations

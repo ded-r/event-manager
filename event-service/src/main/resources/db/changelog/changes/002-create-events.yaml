@@ -1,0 +1,88 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002
+      author: Didar Auyesbay
+      changes:
+        - createTable:
+            tableName: events
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: title
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: text
+              - column:
+                  name: location_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_time
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_time
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: max_participants
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamptz
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: bigint
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+        - sql:
+            dbms: 'postgresql'
+            sql: alter table events add constraint ck_events_max_participants_positive check (max_participants > 0);
+        - sql:
+            dbms: 'postgresql'
+            sql: alter table events add constraint ck_events_status check (status in ('DRAFT', 'PUBLISHED', 'CANCELLED', 'COMPLETED'));
+        - sql:
+            dbms: 'postgresql'
+            sql: alter table events add constraint ck_events_end_time_bigger check (end_time > start_time);
+        - addForeignKeyConstraint:
+            baseTableName: events
+            baseColumnNames: location_id
+            referencedTableName: locations
+            referencedColumnNames: id
+            constraintName: fk_events_locations
+            onDelete: restrict
+        - createSequence:
+            sequenceName: events_seq
+            incrementBy: 50
+      rollback:
+        - dropTable:
+            tableName: events
+        - dropSequence:
+            sequenceName: events_seq

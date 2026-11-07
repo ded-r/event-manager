@@ -1,0 +1,72 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001
+      author: Didar Auyesbay
+      changes:
+        - createTable:
+            tableName: locations
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: address
+                  type: varchar(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: city
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: country
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: capacity
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamptz
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: bigint
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+        - sql:
+            dbms: 'postgresql'
+            sql: alter table locations add constraint ck_locations_capacity_positive check (capacity > 0);
+        - addUniqueConstraint:
+            constraintName: uq_locations_name_address
+            tableName: locations
+            columnNames: name, address
+        - createSequence:
+            sequenceName: locations_seq
+            incrementBy: 50
+      rollback:
+        - dropTable:
+            tableName: locations
+        - dropSequence:
+            sequenceName: locations_seq
+
