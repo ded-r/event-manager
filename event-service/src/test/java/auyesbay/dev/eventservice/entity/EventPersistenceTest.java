@@ -158,7 +158,7 @@ public class EventPersistenceTest {
     // Test 5
     @Test
     void shouldRejectUnknownStatusInDatabase() {
-        // Save the location so it exists in the database and has an ID
+        // Save the locationId so it exists in the database and has an ID
         Location location = testEntityManager.persistAndFlush(createValidLocationForEventTests());
 
         Query query = testEntityManager.getEntityManager().createNativeQuery("""
