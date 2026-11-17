@@ -21,5 +21,10 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @EntityGraph(attributePaths = "location")
     Page<Event> findByStartTimeBetween(Instant from, Instant to, Pageable pageable);
 
+    @Override
+    @EntityGraph(attributePaths = "location")
+    Page<Event> findAll(Pageable pageable);
+
+
     boolean existsByLocationId(Long locationId);
 }

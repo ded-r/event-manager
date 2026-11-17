@@ -197,9 +197,10 @@ public class EventRepositoryTest {
         assertThat(stats.getPrepareStatementCount()).isEqualTo(2);   // page + count
     }
 
-    // Test 8
+    // Test 8: findAll is overridden with @EntityGraph, so it no longer causes N+1.
+    // (Before the override this exact test measured 7 statements: page + count + 5 locations.)
     @Test
-    void plainFindAllCausesNPlusOne() {
+    void findAllUsesEntityGraphToAvoidNPlusOne() {
         seedEventsEachWithOwnLocation(10);
         Statistics stats = statistics();
         stats.clear();
@@ -207,7 +208,7 @@ public class EventRepositoryTest {
         Page<Event> page = eventRepository.findAll(PageRequest.of(0, 5));
         page.getContent().forEach(e -> e.getLocation().getName());
 
-        assertThat(stats.getPrepareStatementCount()).isEqualTo(7);   // page + count + 5 locations
+        assertThat(stats.getPrepareStatementCount()).isEqualTo(2);   // page (with join) + count
     }
 
     // Test 9

@@ -105,7 +105,7 @@ Where a step below says "Boot 3 style", check the Boot 4 equivalent first — ve
 > - **Pitfalls**: `JOIN FETCH` + `Pageable` on collections → in-memory pagination (`HHH000104`); here `@ManyToOne` is safe. `EAGER` is not a fix (it just hides N+1 and applies everywhere).
 > - **Search**: `HHH000104 firstResult maxResults in memory`, `EntityGraph vs join fetch`, `hibernate statistics query count test`.
 
-- [ ] **Step 1.17: `LocationService`** (`@Transactional` at class level with `readOnly = true` on reads): `create`, `getById`, `list(Pageable)`, `update`, `delete`. Throw `ResourceNotFoundException`, `DuplicateResourceException`, `ConflictException` (location in use).
+- [ ] **Step 1.17: `LocationService`** (`@Transactional` at class level with `readOnly = true` on reads): `create`, `getById`, `list(Pageable)`, `update`, `delete`. Throw `ResourceNotFoundException`, `DuplicateResourceException`, `BusinessRuleException` (location in use).
   - ✅ Verify: unit tests (Mockito) for happy path + not found + duplicate.
 
 - [ ] **Step 1.18: `EventService`**: `create`, `getById`, `list(Pageable, optional status/city/from/to filters)`, `update`, `changeStatus`, `delete`. Enforce the capacity rule decided in 1.0 and status transitions. Keep transactions short and free of external calls.
